@@ -8,10 +8,11 @@
 
 import UIKit
 import Parse
+import DoneHUD
 
 class CreatePostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
 
-    @IBOutlet weak var selectedImage: UIImageView!
+    @IBOutlet weak var selectedImage: UIImageView?
     @IBOutlet weak var captionField: UITextView!
     @IBOutlet weak var textLabel: UILabel!
     
@@ -37,7 +38,7 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        selectedImage?.image=nil
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
         captionField.delegate = self
@@ -60,13 +61,26 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
             
             // Do something with the images (based on your use case)
             image = editedImage
-            selectedImage.image = image
+            selectedImage!.image = image
             // Dismiss UIImagePickerController to go back to your original view controller
             dismissViewControllerAnimated(true, completion: nil)
     }
     @IBAction func onPost(sender: AnyObject) {
-       Post.postUserImage(image, withCaption: captionField.text, withCompletion: nil)
-        print("succesfully posted")
+        if selectedImage?.image != nil && captionField.text.characters.count>0{
+            let resizedimage = resize(image, newSize:CGSize(width: 300, height: 200))
+            Post.postUserImage(resizedimage, withCaption: captionField.text, withCompletion: nil)
+            print("succesfully posted")
+            DoneHUD.showInView(self.view, message: "Done")
+           
+            let time = dispatch_time(dispatch_time_t(DISPATCH_TIME_NOW), 1 * Int64(NSEC_PER_SEC))
+            dispatch_after(time, dispatch_get_main_queue()) {
+                self.tabBarController?.selectedIndex = 0
+            }
+        }else {
+            let alert = UIAlertController(title: "Empty image or caption", message: "You must add an image and there must be a caption to upload the post", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        }
         
     }
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
@@ -87,6 +101,17 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
         }else {
             textLabel.hidden = false
         }
+    }
+    func resize(image: UIImage, newSize: CGSize) -> UIImage {
+        let resizeImageView = UIImageView(frame: CGRectMake(0, 0, newSize.width, newSize.height))
+        resizeImageView.contentMode = UIViewContentMode.ScaleAspectFill
+        resizeImageView.image = image
+        
+        UIGraphicsBeginImageContext(resizeImageView.frame.size)
+        resizeImageView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
     }
     
 

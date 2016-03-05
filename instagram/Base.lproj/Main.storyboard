@@ -107,7 +107,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="321.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="paq-Uq-6mu">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="paq-Uq-6mu" customClass="PFImageView">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="274"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="274" id="2x2-mf-s4Z"/>

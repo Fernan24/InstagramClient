@@ -20,6 +20,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.posts = posts
             self.tableView.reloadData()
         }
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: "refreshControlAction:", forControlEvents: UIControlEvents.ValueChanged)
+        tableView.insertSubview(refreshControl, atIndex: 0)
+        //print(posts)
         
     }
 
@@ -27,12 +31,27 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    func refreshControlAction(refreshControl: UIRefreshControl) {
+        //Connect to the API to have the last update
+        getPosts { (posts, error) -> Void in
+            self.posts = posts
+            self.tableView.reloadData()
+        }
+        
+        //update the collection data source
+        refreshControl.endRefreshing()
+    }
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        if posts?.count>0 {
+            return (posts?.count)!
+        }else {
+            return 0
+        }
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! PostCell
         let data = posts?[indexPath.row]
+        cell.instaPost = data
         return cell
     }
     func getPosts(completion: (posts: [PFObject]?, error: NSError?)-> Void){
@@ -44,7 +63,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if let posts = posts {
                 completion(posts: posts, error: nil)
             } else {
-                print("couldn't retrieve media")
+                print("failed to get data")
             }
         }
     }
