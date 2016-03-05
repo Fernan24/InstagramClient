@@ -13,16 +13,21 @@ import Parse
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var storyboard = UIStoryboard(name: "Main", bundle: nil)
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        Parse.initializeWithConfiguration(
-            ParseClientConfiguration(block: { (configuration:ParseMutableClientConfiguration) -> Void in
-                configuration.applicationId = "myAppId"
-                configuration.server = "https://myAppName.herokuapp.com/parse"
-            })
-        )
+       
+        Parse.setApplicationId("Tj9WcYiUG0E8rlx7TmeTC2KJyOMrqftp0f84TrQu",
+            clientKey: "wGsO7nOf8wrsEGRIcVgi13YJxRTWC2vFXtn6j6Mj")
+        if PFUser.currentUser() != nil {
+            let vc = storyboard.instantiateViewControllerWithIdentifier("tabControl") as UIViewController
+            print("user is logged in")
+            window?.rootViewController = vc
+        }else{
+            storyboard.instantiateInitialViewController()
+        }
         return true
     }
 
