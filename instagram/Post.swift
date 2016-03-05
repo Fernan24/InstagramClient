@@ -10,9 +10,7 @@ import UIKit
 import Parse
 
 class Post: NSObject {
-    /**
-     * Other methods
-     */
+    
      
      /**
      Method to add a user post to Parse (uploading image file)

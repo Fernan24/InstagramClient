@@ -9,10 +9,15 @@
 import UIKit
 import Parse
 
-class CreatePostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class CreatePostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate {
 
     @IBOutlet weak var selectedImage: UIImageView!
     @IBOutlet weak var captionField: UITextView!
+    @IBOutlet weak var textLabel: UILabel!
+    
+    let imagePicker = UIImagePickerController()
+    var image: UIImage = UIImage()
+    
     @IBAction func onTakePicture(sender: AnyObject) {
         let vc = UIImagePickerController()
         vc.delegate = self
@@ -28,11 +33,18 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
         vc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
         
         self.presentViewController(vc, animated: true, completion: nil)
+        
     }
     override func viewDidLoad() {
         super.viewDidLoad()
        
-
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        captionField.delegate = self
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
+    
+        //self.presentViewController(imagePicker, animated: true, completion: nil)
         // Do any additional setup after loading the view.
     }
 
@@ -47,15 +59,33 @@ class CreatePostViewController: UIViewController, UIImagePickerControllerDelegat
             let editedImage = info[UIImagePickerControllerEditedImage] as! UIImage
             
             // Do something with the images (based on your use case)
-            selectedImage.image = editedImage
+            image = editedImage
+            selectedImage.image = image
             // Dismiss UIImagePickerController to go back to your original view controller
             dismissViewControllerAnimated(true, completion: nil)
     }
     @IBAction func onPost(sender: AnyObject) {
-        Post.postUserImage(selectedImage.image, withCaption: captionField.text) { (succes:Bool, error:NSError?) -> Void in
-            if error == nil {
-                print("posted sucessfully")
-            }
+       Post.postUserImage(image, withCaption: captionField.text, withCompletion: nil)
+        print("succesfully posted")
+        
+    }
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        if(text == "\n") {
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
+    }
+    func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
+    }
+    func textViewDidChange(textView: UITextView) {
+        let count = textView.text.characters.count
+        if count != 0 {
+            textLabel.hidden = true
+        }else {
+            textLabel.hidden = false
         }
     }
     

@@ -10,30 +10,17 @@ import UIKit
 import Parse 
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
-    var posts:[Post]?
+    var posts:[PFObject]?
     @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
-        
-        // construct PFQuery
-        let query = PFQuery(className: "Post")
-        query.orderByDescending("createdAt")
-        query.includeKey("author")
-        query.limit = 20
-        
-        // fetch data asynchronously
-        query.findObjectsInBackgroundWithBlock { (posts: [PFObject]?, error: NSError?) -> Void in
-            if let posts = posts {
-                // do something with the data fetched
-               // self.posts = posts
-            } else {
-                // handle error
-            }
+        getPosts { (posts, error) -> Void in
+            self.posts = posts
+            self.tableView.reloadData()
         }
         
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -44,8 +31,22 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return 0
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! PostCell
+        let data = posts?[indexPath.row]
         return cell
+    }
+    func getPosts(completion: (posts: [PFObject]?, error: NSError?)-> Void){
+        let query = PFQuery(className: "Post")
+        query.orderByDescending("createdAt")
+        query.includeKey("author")
+        query.limit = 20
+        query.findObjectsInBackgroundWithBlock { (posts: [PFObject]?, error: NSError?) -> Void in
+            if let posts = posts {
+                completion(posts: posts, error: nil)
+            } else {
+                print("couldn't retrieve media")
+            }
+        }
     }
     
 
