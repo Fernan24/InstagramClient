@@ -146,7 +146,7 @@
                             <constraint firstItem="4It-QV-xcf" firstAttribute="leading" secondItem="BVL-kd-b3Z" secondAttribute="leadingMargin" constant="-20" id="xEg-GR-USY"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Home" id="xrE-Mg-yiv"/>
+                    <tabBarItem key="tabBarItem" title="Home" image="noun_354216_cc.png" id="xrE-Mg-yiv"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                     <connections>
                         <outlet property="tableView" destination="4It-QV-xcf" id="DOm-Hj-Gb1"/>
@@ -188,7 +188,7 @@
                             <constraint firstAttribute="trailingMargin" secondItem="f6d-Ga-UBj" secondAttribute="trailing" constant="-20" id="YrR-dj-qpL"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Account" id="3TP-pq-58v"/>
+                    <tabBarItem key="tabBarItem" title="Account" image="noun_419_cc.png" id="3TP-pq-58v"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="presentation" identifier="logoutSgue" id="cq7-ov-5bY"/>
@@ -311,7 +311,7 @@
                             <constraint firstItem="lfZ-1j-2Bt" firstAttribute="bottom" secondItem="YPc-nm-vAL" secondAttribute="top" id="tOs-uZ-ybQ"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Post" id="V1e-ge-Zwe"/>
+                    <tabBarItem key="tabBarItem" title="Post" image="instagram-512.png" id="V1e-ge-Zwe"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="414" height="850"/>
                     <connections>
@@ -325,4 +325,9 @@
             <point key="canvasLocation" x="108" y="1206"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="instagram-512.png" width="35" height="35"/>
+        <image name="noun_354216_cc.png" width="32" height="29"/>
+        <image name="noun_419_cc.png" width="35" height="23"/>
+    </resources>
 </document>
